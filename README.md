@@ -69,20 +69,13 @@ Located in `classes/console`, these commands provide a CLI interface for generat
 - **English**: `lang/en/lang.php`
 - **Russian**: `lang/ru/lang.php`
 
-## Live Demo
-
-Try this plugin on our [demo site](http://demo.shopaholic.one). Access the backend using the credentials:
-
-- **User**: manager
-- **Password**: manager
-
 ## What is Shopaholic?
 
 Shopaholic is the most popular e-commerce ecosystem for October CMS, designed with a focus on modularity and simplicity. Learn more at [shopaholic.one](https://shopaholic.one).
 
 ## Credits
 
-- Developed by **Logingrupa** as an extension of [Lovata Shopaholic](https://octobercms.com/plugin/lovata-shopaholic).
+- Extended by **Logingrupa** as an extension of [Lovata Shopaholic](https://octobercms.com/plugin/lovata-shopaholic).
 - Core plugin development by [Sergey Zakharevich](https://github.com/wobqqq) and [Andrey Kharanenka](https://github.com/kharanenka).
 
 ## License
