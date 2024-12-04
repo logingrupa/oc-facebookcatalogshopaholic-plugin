@@ -1,0 +1,602 @@
+fields:
+tabs:
+  icons:
+    logingrupa.facebookcatalogshopaholic::lang.tab.yandex: icon-briefcase
+    logingrupa.facebookcatalogshopaholic::lang.tab.kurpirkt: icon-arrow-right
+    logingrupa.facebookcatalogshopaholic::lang.tab.facebook: icon-facebook
+    logingrupa.facebookcatalogshopaholic::lang.tab.salidzini: icon-retweet
+  fields:
+    kurpirkt_section:
+      type: section
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.kurpirkt_section'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.kurpirkt_section_comment'
+      commentHtml: true
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.kurpirkt'
+    kurpirkt_export_is_active:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.kurpirkt_export_is_active'
+      type: switch
+      span: left
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.kurpirkt'
+    kurpirkt_manufacturer:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.kurpirkt_manufacturer'
+      type: text
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: kurpirkt_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.kurpirkt'
+      default: false
+    delivery_cost_riga:
+      options: listShippingOptionsPrices
+      type: dropdown
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.kurpirkt_delivery_cost_riga'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.shipping_service_price_description'
+      commentHtml: true
+      span: left
+      trigger:
+        action: show
+        field: kurpirkt_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.kurpirkt'
+    facebook_section:
+      type: section
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.facebook_section'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.facebook_section_comment'
+      commentHtml: true
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.facebook'
+    facebook_export_is_active:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.facebook_export_is_active'
+      type: switch
+      span: left
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.facebook'
+    facebook_shipping_country:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.facebook_shipping_country'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.facebook_shipping_country_description'
+      commentHtml: true
+      placeholder: 'LV'
+      type: text
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: facebook_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.facebook'
+    facebook_shipping_service:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.facebook_shipping_service'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.facebook_shipping_service_description'
+      commentHtml: true
+      placeholder: 'DPD Pakubode'
+      type: text
+      span: right
+      required: false
+      trigger:
+        action: show
+        field: facebook_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.facebook'
+    facebook_shipping_service_price:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.facebook_shipping_service_price'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.shipping_service_price_description'
+      commentHtml: true
+      options: listShippingOptionsPrices
+      type: dropdown
+      span: right
+      required: false
+      trigger:
+        action: show
+        field: facebook_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.facebook'
+    facebook_google_product_category:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.facebook_google_product_category'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.facebook_google_product_category_description'
+      commentHtml: true
+      placeholder: '2975'
+      type: number
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: facebook_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.facebook'
+    facebook_google_custom_label:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.facebook_google_custom_label'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.facebook_google_custom_label_description'
+      commentHtml: true
+      placeholder: 'Made in Latvia, EU'
+      type: text
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: facebook_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.facebook'
+    short_store_name:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_short_store_name'
+      placeholder: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_short_store_name_placeholder'
+      type: text
+      span: left
+      required: false
+    full_company_name:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_full_company_name'
+      placeholder: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_full_company_name'
+      type: text
+      span: right
+      required: false
+    store_homepage_url:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_store_homepage_url'
+      placeholder: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_store_homepage_url'
+      type: text
+      span: left
+      required: false
+    agency:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_agency'
+      type: text
+      span: left
+      required: false
+      placeholder: 'logingrupa.facebookcatalogshopaholic::lang.field.agency_placeholder'
+    email_agency:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_email_agency'
+      type: text
+      span: right
+      required: false
+      placeholder: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_email_agency_placeholder'
+    salidzini_section:
+      type: section
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_section'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_section_comment'
+      commentHtml: true
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+    salidzini_export_is_active:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_export_is_active'
+      type: switch
+      span: left
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+    salidzini_delivery_cost_riga_is_active:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_cost_riga'
+      type: checkbox
+      span: left
+      default: false
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    salidzini_delivery_cost_riga:
+      # label: 'logingrupa.facebookcatalogshopaholic::lang.field.delivery_cost_riga'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.shipping_service_price_description'
+      commentHtml: true
+      options: listShippingOptionsPrices
+      type: dropdown
+      span: left
+      trigger:
+        action: show
+        field: salidzini_delivery_cost_riga_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+    salidzini_delivery_latvija_is_active:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_latvija'
+      type: checkbox
+      span: left
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    salidzini_delivery_latvija:
+      # label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_latvija'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.shipping_service_price_description'
+      commentHtml: true
+      options: listShippingOptionsPrices
+      type: dropdown
+      span: left
+      trigger:
+        action: show
+        field: salidzini_delivery_latvija_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+    salidzini_delivery_latvijas_pasts_is_active:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_latvijas_pasts'
+      type: checkbox
+      span: left
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    salidzini_delivery_latvijas_pasts:
+      # label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_latvijas_pasts'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.shipping_service_price_description'
+      commentHtml: true
+      options: listShippingOptionsPrices
+      type: dropdown
+      span: left
+      trigger:
+        action: show
+        field: salidzini_delivery_latvijas_pasts_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+    salidzini_delivery_dpd_paku_bode_is_active:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_dpd_paku_bode'
+      type: checkbox
+      span: left
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    salidzini_delivery_dpd_paku_bode:
+      # label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_dpd_paku_bode'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.shipping_service_price_description'
+      commentHtml: true
+      options: listShippingOptionsPrices
+      type: dropdown
+      span: left
+      trigger:
+        action: show
+        field: salidzini_delivery_dpd_paku_bode_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+    salidzini_delivery_omniva_is_active:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_omniva'
+      type: checkbox
+      span: left
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    salidzini_delivery_omniva:
+      # label: 'logingrupa.facebookcatalogshopaholic::lang.field.delivery_omniva'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.shipping_service_price_description'
+      commentHtml: true
+      options: listShippingOptionsPrices
+      type: dropdown
+      span: left
+      trigger:
+        action: show
+        field: salidzini_delivery_omniva_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+    salidzini_delivery_pasta_stacija_is_active:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_pasta_stacija'
+      type: checkbox
+      span: left
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    salidzini_delivery_pasta_stacija:
+      # label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_pasta_stacija'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.shipping_service_price_description'
+      commentHtml: true
+      options: listShippingOptionsPrices
+      type: dropdown
+      span: left
+      trigger:
+        action: show
+        field: salidzini_delivery_pasta_stacija_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+    salidzini_delivery_circlek_is_active:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_circlek'
+      type: checkbox
+      span: left
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    salidzini_delivery_circlek:
+      # label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_circlek'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.shipping_service_price_description'
+      commentHtml: true
+      options: listShippingOptionsPrices
+      type: dropdown
+      span: left
+      trigger:
+        action: show
+        field: salidzini_delivery_circlek_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+    salidzini_delivery_venipak_is_active:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_venipak'
+      type: checkbox
+      span: left
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    salidzini_delivery_venipak:
+      # label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_venipak'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.shipping_service_price_description'
+      commentHtml: true
+      options: listShippingOptionsPrices
+      type: dropdown
+      span: left
+      trigger:
+        action: show
+        field: salidzini_delivery_venipak_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+    salidzini_delivery_days_latvija:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_days_latvija'
+      # comment: 'logingrupa.facebookcatalogshopaholic::lang.field.shipping_service_price_description'
+      commentHtml: true
+      type: text
+      span: left
+      required: false
+      default: 3
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    salidzini_delivery_days_riga:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_delivery_days_riga'
+      # comment: 'logingrupa.facebookcatalogshopaholic::lang.field.shipping_service_price_description'
+      commentHtml: true
+      type: text
+      span: left
+      required: false
+      default: 3
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    salidzini_adult:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_adult'
+      commentHtml: true
+      options:
+        no: 'No'
+        yes: 'Yes'
+      type: dropdown
+      span: left
+      required: false
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    salidzini_brand_is_active:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_brand'
+      type: checkbox
+      span: left
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    salidzini_brand:
+      # label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_brand'
+      comment: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_brand_comment'
+      commentHtml: true
+      type: text
+      span: left
+      trigger:
+        action: show
+        field: salidzini_brand_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    salidzini_used:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_used'
+      commentHtml: true
+      options:
+        0: 'No'
+        1: 'Yes'
+      type: dropdown
+      span: left
+      required: false
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
+      trigger:
+        action: show
+        field: salidzini_export_is_active
+        condition: checked
+    yandex_export_is_active:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_export_is_active'
+      type: switch
+      span: left
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+    yandex_short_store_name:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_short_store_name'
+      placeholder: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_short_store_name_placeholder'
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      type: text
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+    yandex_full_company_name:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_full_company_name'
+      placeholder: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_full_company_name'
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      type: text
+      span: right
+      required: false
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+    yandex_store_homepage_url:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_store_homepage_url'
+      placeholder: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_store_homepage_url'
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      type: text
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+    yandex_agency:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_agency'
+      type: text
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      placeholder: 'logingrupa.facebookcatalogshopaholic::lang.field.agency_placeholder'
+    yandex_email_agency:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_email_agency'
+      type: text
+      span: right
+      required: false
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      placeholder: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_email_agency_placeholder'
+    yandex_use_main_currency_only:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_use_main_currency_only'
+      type: checkbox
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      default: true
+    yandex_default_currency_rates:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_default_currency_rates'
+      type: checkbox
+      span: left
+      required: false
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      default: true
+      trigger:
+        action: hide
+        field: yandex_use_main_currency_only
+        condition: checked
+    yandex_currency_rates:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_currency_rates'
+      type: repeater
+      span: left
+      required: false
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      form:
+        fields:
+          currency_id:
+            label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_currency'
+            type: dropdown
+            span: left
+            showSearch: true
+            required: false
+            options: getCurrencyOptions
+          rate:
+            label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_rate'
+            type: dropdown
+            span: right
+            showSearch: true
+            required: false
+            options: getRateOptions
+      trigger:
+        action: hide
+        field: yandex_default_currency_rates
+        condition: checked
+    yandex_offers_rate:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_offers_rate'
+      type: number
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      placeholder: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_offers_rate'
+    yandex_section_management_additional_fields_offer:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_section_management_additional_fields_offer'
+      type: section
+      span: left
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+    yandex_field_brand:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_brand'
+      type: checkbox
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      default: false
+    yandex_field_old_price:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_old_price'
+      type: checkbox
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      default: false
+    yandex_field_enable_auto_discounts:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_field_enable_auto_discounts'
+      type: checkbox
+      span: left
+      required: false
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      default: false
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+    yandex_code_model_for_images:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_code_model_for_images'
+      type: dropdown
+      emptyOption: 'lovata.toolbox::lang.field.empty'
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+      options: getGetImagesFromOptions
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+    yandex_field_images:
+      label: 'lovata.toolbox::lang.field.images'
+      type: checkbox
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+      default: false
+    yandex_field_offer_properties:
+      label: 'logingrupa.facebookcatalogshopaholic::lang.field.yandex_properties'
+      type: checkboxlist
+      span: left
+      required: false
+      trigger:
+        action: show
+        field: yandex_export_is_active
+        condition: checked
+      options: getOfferPropertiesOptions
+      tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.yandex'
+

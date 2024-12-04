@@ -1,0 +1,25 @@
+1.0.0:
+  - 'Init plugin'
+1.0.1:
+  - 'Updated config for backend fields in Offer, Product models'
+1.0.2:
+  - 'Added require array to Plugin file'
+1.1.0:
+  - 'Improved integration. Thanks for contribution Nick Khaetsky.'
+1.2.0:
+  - 'Added Facebook Catalog XML export.'
+1.3.0:
+  - 'Added Kurpirkt.lv Catalog XML export.'
+1.3.1:
+  - 'Added Facebook export settings to backend, and reformated code'
+2.0.0:
+  - '!!! After updating, you will need to update XML export settings in settings page'
+  - 'Added Catalog export to salidzini.lv'
+  - 'Added dynamic shipping prices for kurpirkt.lv and salidzini.lv'
+  - 'TODO: Impliment model and color, add them to Product  model and Offers model'
+2.0.1:
+  - 'Added Salidzini.Catalog export button to widget area'
+2.1.2:
+  - '!!!Changed settings field names, please fill in settings again after update'
+  - 'Plugin life improvments in settings page'
+  - 'Each XML export option can needs to be activated seperatly'
