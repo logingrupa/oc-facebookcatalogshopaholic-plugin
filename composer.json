@@ -1,5 +1,5 @@
 {
-  "name": "logingrupa/facebookcatalogshopaholic-plugin",
+  "name": "logingrupa/oc-facebookcatalogshopaholic-plugin",
   "type": "october-plugin",
   "description": "October CMS Plugin extending Lovata.YandecMarket functionality for LOVAT Shopaholic plugin, enables merchants to export their product catalogs in formats compatible with various platforms, including Facebook Catalog, Yandex Market, KurPirkt.lv, and Salidzini.lv",
   "license": "GPL-3.0-only",
