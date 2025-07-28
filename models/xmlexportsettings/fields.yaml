@@ -386,10 +386,6 @@ tabs:
         field: salidzini_brand_is_active
         condition: checked
       tab: 'logingrupa.facebookcatalogshopaholic::lang.tab.salidzini'
-      trigger:
-        action: show
-        field: salidzini_export_is_active
-        condition: checked
     salidzini_used:
       label: 'logingrupa.facebookcatalogshopaholic::lang.field.salidzini_used'
       commentHtml: true

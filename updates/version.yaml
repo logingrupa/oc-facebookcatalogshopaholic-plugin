@@ -23,3 +23,5 @@
   - '!!!Changed settings field names, please fill in settings again after update'
   - 'Plugin life improvments in settings page'
   - 'Each XML export option can needs to be activated seperatly'
+2.1.3:
+  - 'Fixed settings page duplicate trigger'
