@@ -2,6 +2,8 @@
 
 use Event;
 use System\Classes\PluginBase;
+use Lovata\Shopaholic\Classes\Item\ProductItem;
+use Lovata\Shopaholic\Classes\Item\OfferItem;
 
 // Command
 use LoginGrupa\FacebookCatalogShopaholic\Classes\Console\CatalogExportForYandexMarket;
@@ -59,6 +61,21 @@ class Plugin extends PluginBase
         // // Product event
         // Event::subscribe(ExtendProductFieldsHandler::class);
         // Event::subscribe(ProductModelHandler::class);
+
+        // ExtendOfferModelHandler registers preview_image_yandex/images_yandex as
+        // cached attachment fields; without eager loading Toolbox setCachedFieldList
+        // lazy-loads them one query per offer (2 empty queries per offer on cold
+        // priming - no offer has yandex files). Product-level yandex relations do
+        // NOT exist (product handlers above are disabled) - only the offer-nested
+        // paths are valid on ProductItem.
+        OfferItem::$arQueryWith = array_merge(OfferItem::$arQueryWith, [
+            'preview_image_yandex',
+            'images_yandex',
+        ]);
+        ProductItem::$arQueryWith = array_merge(ProductItem::$arQueryWith, [
+            'offer.preview_image_yandex',
+            'offer.images_yandex',
+        ]);
     }
 
     /**
