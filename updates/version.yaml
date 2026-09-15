@@ -29,3 +29,5 @@
   - 'Export runs on October v4 again: the removed October\Rain\Argon\Argon class is replaced by Carbon and the feed date uses a 24 hour clock.'
   - 'The Facebook feed is generated nightly at 02:30 Riga time by the scheduler. The command applies the shop site (route prefix, locale, site settings) before exporting and skips when facebook_export_is_active is off.'
   - 'The Facebook export streams offers and products one item at a time and releases them from ItemStorage. Cold-cache peak memory drops from 1.3 GB to about 420 MB, under the 512 MB console limit. Product rows take price, stock, images and the GTIN fallback from the same cheapest offer.'
+2.1.5:
+  - 'Feed links are bare /p/... again, without the site route prefix, so October sends each Facebook or Instagram visitor to their own language. The command still applies the site locale and site-scoped settings.'

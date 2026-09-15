@@ -1,5 +1,6 @@
 <?php namespace LoginGrupa\FacebookCatalogShopaholic\Classes\Console;
 
+use App;
 use Site;
 use RuntimeException;
 use Illuminate\Console\Command;
@@ -57,10 +58,12 @@ class CatalogExportForFacebookCatalog extends Command
     }
 
     /**
-     * The console resolves the primary site but never applies it: page URLs lose the
-     * route prefix, translated names use the app locale and site-scoped settings read
-     * null. On .no the primary site is the disabled one, the shop runs on the first
-     * enabled site.
+     * The console resolves the primary site but never applies it: translated names use
+     * the app locale and site-scoped settings read null. On .no the primary site is the
+     * disabled one, the shop runs on the first enabled site.
+     *
+     * The route prefix is NOT applied on purpose: feed links stay bare /p/... so October
+     * redirects each Facebook or Instagram visitor to their own language.
      * @return void
      */
     protected function applyShopSite(): void
@@ -74,7 +77,8 @@ class CatalogExportForFacebookCatalog extends Command
             throw new RuntimeException('No enabled site definition, cannot resolve the shop site');
         }
 
-        Site::applyActiveSite($obSite);
+        Site::setActiveSite($obSite);
+        App::setLocale($obSite->locale);
 
         if (class_exists(Translator::class)) {
             Translator::instance()->setLocale($obSite->locale, false);

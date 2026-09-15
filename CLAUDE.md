@@ -54,9 +54,11 @@ Root CLAUDE.md governs: Hungarian notation, Store -> Collection -> Item read pat
   every item in ItemStorage (cold cache: 1.3 GB). The Facebook helper walks ID lists and
   clears each offer/product from ItemStorage after use; keep that pattern in the other feeds
   if they are ever scheduled.
-- Console has no applied site: no route prefix in CmsPage::url, app locale, null site-scoped
-  settings. CatalogExportForFacebookCatalog::applyShopSite() fixes that (primary site, or the
-  first enabled one on .no where the primary is disabled). The other three commands still
-  run without it.
+- Console has no applied site: app locale, null site-scoped settings.
+  CatalogExportForFacebookCatalog::applyShopSite() sets the active site + locale (primary
+  site, or the first enabled one on .no where the primary is disabled). It deliberately does
+  NOT apply the route prefix: feed links stay bare /p/... so October redirects every
+  Facebook/Instagram visitor to their own language (owner ruling 2026-09-15). The other three
+  commands still run without any site.
 - Schedule: registerSchedule runs shopaholic:catalog_export.facebook_catalog dailyAt 02:30
   Europe/Riga on every install; the command exits early when facebook_export_is_active is off.
