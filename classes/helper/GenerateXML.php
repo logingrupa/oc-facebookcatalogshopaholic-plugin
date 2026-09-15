@@ -2,7 +2,7 @@
 
 use File;
 use XMLWriter;
-use October\Rain\Argon\Argon;
+use Carbon\Carbon;
 
 /**
  * Class GenerateXML
@@ -65,7 +65,7 @@ class GenerateXML
         $this->obXMLWriter->setIndent(1);
         $this->obXMLWriter->startDocument('1.0', 'UTF-8');
         $this->obXMLWriter->startElement('yml_catalog');
-        $this->obXMLWriter->writeAttribute('date', Argon::now()->format('Y-m-d h:i:s'));
+        $this->obXMLWriter->writeAttribute('date', Carbon::now()->format('Y-m-d H:i:s'));
     }
 
     /**

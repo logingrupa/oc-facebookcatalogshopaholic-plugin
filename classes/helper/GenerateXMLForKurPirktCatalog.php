@@ -2,7 +2,7 @@
 
 use File;
 use XMLWriter;
-use October\Rain\Argon\Argon;
+use Carbon\Carbon;
 
 /**
  * Class GenerateXMLForKurPirktCatalog
@@ -79,7 +79,7 @@ class GenerateXMLForKurPirktCatalog
      */
     protected function setShopElement()
     {
-        $this->obXMLWriter->writeElement('date', Argon::now()->format('Y-m-d h:i:s'));
+        $this->obXMLWriter->writeElement('date', Carbon::now()->format('Y-m-d H:i:s'));
     }
 
     /**

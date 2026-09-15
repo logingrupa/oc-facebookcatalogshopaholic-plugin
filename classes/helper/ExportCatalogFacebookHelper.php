@@ -8,6 +8,7 @@ use Lovata\Shopaholic\Models\Category;
 use Lovata\Shopaholic\Classes\Item\CategoryItem;
 use Lovata\Shopaholic\Classes\Item\OfferItem;
 use Lovata\Shopaholic\Classes\Item\ProductItem;
+use Lovata\Toolbox\Classes\Item\ItemStorage;
 use Lovata\Shopaholic\Classes\Collection\OfferCollection;
 use Lovata\Shopaholic\Classes\Collection\ProductCollection;
 use Lovata\Shopaholic\Classes\Collection\CategoryCollection;
@@ -219,57 +220,73 @@ class ExportCatalogFacebookHelper
      */
     protected function initProductListData()
     {
-        $obProductList = ProductCollection::make()->active();
-        if ($obProductList->isEmpty()) {
-            return;
-        }
-        foreach ($obProductList as $obProduct) {
+        $arProductIDList = ProductCollection::make()->active()->getIDList();
+        foreach ($arProductIDList as $iProductID) {
+            $obProduct = ProductItem::make($iProductID);
             $this->initProduct($obProduct);
+            foreach ($obProduct->offer->getIDList() as $iOfferID) {
+                ItemStorage::clear(OfferItem::class, $iOfferID);
+            }
+            ItemStorage::clear(ProductItem::class, $iProductID);
         }
     }
 
     /**
      * Init Offer list data
+     *
+     * One item at a time: Toolbox keeps every made item in ItemStorage for the whole
+     * process, and a cold-cache collection of all offers with their eager-loaded models
+     * peaks above the 512 MB console memory limit.
      */
     protected function initOffersListData()
     {
-        $obOfferList = OfferCollection::make()->activeProductActiveOffers();
-        if ($obOfferList->isEmpty()) {
-            return;
-        }
-        foreach ($obOfferList as $obOffer) {
+        $arOfferIDList = OfferCollection::make()->activeProductActiveOffers()->getIDList();
+        foreach ($arOfferIDList as $iOfferID) {
+            $obOffer = OfferItem::make($iOfferID);
             if ($obOffer->product->offer->count() > 1) {
                 $this->initOffer($obOffer);
             }
+            ItemStorage::clear(OfferItem::class, $iOfferID);
+            ItemStorage::clear(ProductItem::class, $obOffer->product_id);
         }
     }
 
     /**
-     * Init Product{% set obOffer = obProduct.offer.sort('price|asc').first() %}
+     * Init Product
      *
      * @param ProductItem $obProduct
-     * @return array
+     * @return void
      */
     protected function initProduct($obProduct)
     {
+        $obOfferList = $obProduct->offer;
+        if ($obOfferList->isEmpty()) {
+            return;
+        }
+
+        // The product row carries the cheapest offer: its price, stock and images.
+        $obCheapestOffer = $obOfferList->sort('price|asc')->first();
+        $arPrice = $this->getCorrectOfferPrice($obCheapestOffer);
+        $sBrandName = $this->getBrandName($obProduct);
+
         $arProductData = [
             'name' => $obProduct->name,
-            'ean' => $obProduct->code ? $obProduct->code : $obProduct->offer->first()->code,
+            'ean' => $obProduct->code ? $obProduct->code : $obCheapestOffer->code,
             'url' => CmsPage::url('product', ['slug' => $obProduct->slug]),
             'offer_id' => 'SKU-' . $obProduct->id,
             'product_id' => 'SKU-' . $obProduct->id,
-            'offer_count' => $obProduct->offer->count(),
-            'price' => $this->getCorrectOfferPrice($obProduct->offer->sort('price|asc')->first())[0],
+            'offer_count' => $obOfferList->count(),
+            'price' => $arPrice[0],
             'inventory' => 99,
-            'visibility' => $obProduct->offer->first()->quantity > 0 ? 'published' : 'hidden',
-            'availability' => $obProduct->offer->first()->quantity > 0 ? 'in stock' : 'out of stock',
+            'visibility' => $obCheapestOffer->quantity > 0 ? 'published' : 'hidden',
+            'availability' => $obCheapestOffer->quantity > 0 ? 'in stock' : 'out of stock',
             'currency_id' => !empty($this->obDefaultCurrency) ? $this->obDefaultCurrency->code : '',
             'product_category' => $this->getBreadcrumbsNames($obProduct->category),
             'product_image' => !is_null($obProduct->preview_image) ? $obProduct->preview_image->path : 'https://via.placeholder.com/1000x821/f1f1f1/?retina=0&text=' . $obProduct->name,
-            'images'       => $this->getImages($obProduct->offer->first()),
+            'images'       => $this->getImages($obCheapestOffer, $obProduct),
             'description' => $obProduct->description ? preg_replace('/<[^>]*>/', '', $obProduct->description) : $obProduct->name .' NAILS cosmetics profesionālais produktu klāsts',
-            'brand_name'     => !empty($this->getBrandName($obProduct)) ? $this->getBrandName($obProduct) : 'NAILS cosmetics',
-            'sale_price' => $this->getCorrectOfferPrice($obProduct->offer->sort('price|asc')->first())[1],
+            'brand_name'     => !empty($sBrandName) ? $sBrandName : 'NAILS cosmetics',
+            'sale_price' => $arPrice[1],
         ];
 
         $arEventData = Event::fire(self::EVENT_FACEBOOK_CATALOG_PRODUCT_DATA, [$arProductData]);
@@ -289,10 +306,10 @@ class ExportCatalogFacebookHelper
      * Get offer images
      *
      * @param OfferItem $obOffer
-     * @param ProductItem $obProduct 
+     * @param ProductItem $obProduct
      * @return array
      */
-    protected function getImages($obOffer)
+    protected function getImages($obOffer, $obProduct)
     {
         $arResult = [];
 
@@ -304,21 +321,23 @@ class ExportCatalogFacebookHelper
         }
 
         // Add product preview image (if available)
-        if ($obOffer->product && $obOffer->product->preview_image) {
-            $arResult[] = $obOffer->product->preview_image->getPath();
+        if ($obProduct->preview_image) {
+            $arResult[] = $obProduct->preview_image->getPath();
         }
 
         // Add offer images if only more than one image
-        if (count($obOffer->images) > 1) {
-            foreach ($obOffer->images as $image) {
-                $arResult[] = $image->getPath();
+        $obOfferImageList = $obOffer->images;
+        if (count($obOfferImageList) > 1) {
+            foreach ($obOfferImageList as $obImage) {
+                $arResult[] = $obImage->getPath();
             }
         }
 
         // Add offer product images only if more than one image
-        if (count($obOffer->product->images) > 1) {
-            foreach ($obOffer->product->images as $image) {
-                $arResult[] = $image->getPath();
+        $obProductImageList = $obProduct->images;
+        if (count($obProductImageList) > 1) {
+            foreach ($obProductImageList as $obImage) {
+                $arResult[] = $obImage->getPath();
             }
         }
 
@@ -349,27 +368,30 @@ class ExportCatalogFacebookHelper
      */
     protected function initOffer($obOffer)
     {
+        $obProduct = $obOffer->product;
+        $arPrice = $this->getCorrectOfferPrice($obOffer);
+
         $arOfferData = [
             'name' => (strlen($obOffer->name) > 65) ? $this->getShorterTitle($obOffer->name) : $obOffer->name,
-            'ean' => !is_null($obOffer->code) ? $obOffer->code : $obOffer->product->code,
-            'url' => ($obOffer->product->offer->count() == 1) ? CmsPage::url('product', ['slug' => $obOffer->product->slug]) : CmsPage::url('product', ['slug' => $obOffer->product->slug, 'offer' => $obOffer->id]),
-            'offer_id' => 'SKU-' . $obOffer->product->id . '-' . $obOffer->id,
-            'product_id' => 'SKU-' . $obOffer->product->id,
-            'offerCount' => $obOffer->product->offer->count(),
+            'ean' => !is_null($obOffer->code) ? $obOffer->code : $obProduct->code,
+            'url' => CmsPage::url('product', ['slug' => $obProduct->slug, 'offer' => $obOffer->id]),
+            'offer_id' => 'SKU-' . $obProduct->id . '-' . $obOffer->id,
+            'product_id' => 'SKU-' . $obProduct->id,
+            'offerCount' => $obProduct->offer->count(),
             'id' => $obOffer->id,
-            'price' => $this->getCorrectOfferPrice($obOffer)[0],
+            'price' => $arPrice[0],
             'inventory' => $obOffer->quantity < 0 ? 0 : $obOffer->quantity,
             'visibility' => $obOffer->quantity > 0 ? 'published' : 'hidden',
             'availability' => $obOffer->quantity > 0 ? 'in stock' : 'out of stock',
             'currency_id' => !empty($this->obDefaultCurrency) ? $this->obDefaultCurrency->code : '',
-            'product_category' => $this->getBreadcrumbsNames($obOffer->product->category),
-            'color' => preg_match('/(?<=\().+?(?=\))/', $obOffer->name, $output_array) ? $output_array[0] : '' . $obOffer->variation,
+            'product_category' => $this->getBreadcrumbsNames($obProduct->category),
+            'color' => preg_match('/(?<=\().+?(?=\))/', $obOffer->name, $output_array) ? $output_array[0] : (string)$obOffer->variation,
             'offer_image' => !is_null($obOffer->preview_image) ? $obOffer->preview_image->path : null,
-            'product_image' => !is_null($obOffer->product->preview_image) ? $obOffer->product->preview_image->path : null,
-            'images' => $this->getImages($obOffer),
-            'description' => $obOffer->description ? preg_replace('/<[^>]*>/', '', $obOffer->description) : ($obOffer->product->description ? preg_replace('/<[^>]*>/', '', $obOffer->product->description) : $obOffer->name .' NAILS cosmetics profesionālais produktu klāsts'),
-            'brand_name'     => $this->getBrandName($obOffer->product),
-            'sale_price' => $this->getCorrectOfferPrice($obOffer)[1],
+            'product_image' => !is_null($obProduct->preview_image) ? $obProduct->preview_image->path : null,
+            'images' => $this->getImages($obOffer, $obProduct),
+            'description' => $obOffer->description ? preg_replace('/<[^>]*>/', '', $obOffer->description) : ($obProduct->description ? preg_replace('/<[^>]*>/', '', $obProduct->description) : $obOffer->name .' NAILS cosmetics profesionālais produktu klāsts'),
+            'brand_name'     => $this->getBrandName($obProduct),
+            'sale_price' => $arPrice[1],
             'video' =>  $this->getVideoPath($obOffer),
         ];
 
@@ -380,7 +402,7 @@ class ExportCatalogFacebookHelper
                     continue;
                 }
 
-                $arOfferData = array_merge($arOfferData, $arEventOfferData, $arProductData);
+                $arOfferData = array_merge($arOfferData, $arEventOfferData);
             }
         }
 

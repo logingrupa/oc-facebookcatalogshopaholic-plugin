@@ -46,4 +46,17 @@ Root CLAUDE.md governs: Hungarian notation, Store -> Collection -> Item read pat
   attachment fields. Product-level yandex relations do NOT exist (product handlers are
   disabled); only offer-nested paths are valid on ProductItem.
 - 2.1.2 RENAMED the settings field names - after that update settings must be re-filled,
-  and each XML export option must be activated separately.
+  and each XML export option must be activated separately. The Facebook feed reads
+  short_store_name / store_homepage_url (title, link, g:brand), NOT the yandex_* copies.
+- October v4 has no October\Rain\Argon\Argon; the XML writers use Carbon\Carbon. The Argon
+  import killed every export from the v4 cutover until 2.1.4.
+- Console memory_limit on the Forge boxes is 512M. Iterating a full Toolbox collection keeps
+  every item in ItemStorage (cold cache: 1.3 GB). The Facebook helper walks ID lists and
+  clears each offer/product from ItemStorage after use; keep that pattern in the other feeds
+  if they are ever scheduled.
+- Console has no applied site: no route prefix in CmsPage::url, app locale, null site-scoped
+  settings. CatalogExportForFacebookCatalog::applyShopSite() fixes that (primary site, or the
+  first enabled one on .no where the primary is disabled). The other three commands still
+  run without it.
+- Schedule: registerSchedule runs shopaholic:catalog_export.facebook_catalog dailyAt 02:30
+  Europe/Riga on every install; the command exits early when facebook_export_is_active is off.

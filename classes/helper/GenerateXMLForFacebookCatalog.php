@@ -2,7 +2,7 @@
 
 use File;
 use XMLWriter;
-use October\Rain\Argon\Argon;
+use Carbon\Carbon;
 use LoginGrupa\FacebookCatalogShopaholic\Models\XMLExportSettings;
 
 /**
@@ -25,6 +25,11 @@ class GenerateXMLForFacebookCatalog
      * @var array
      */
     protected $arOffersData = [];
+
+    /**
+     * @var array
+     */
+    protected $arProductsData = [];
 
     /**
      * Generated content
@@ -100,7 +105,7 @@ class GenerateXMLForFacebookCatalog
         $this->obXMLWriter->writeAttribute('rel', 'self');
         $this->obXMLWriter->writeAttribute('type', 'application/rss+xml');
         $this->obXMLWriter->endElement();
-        $this->obXMLWriter->writeElement('date', Argon::now('Europe/Riga')->format('Y-m-d h:i:s'));
+        $this->obXMLWriter->writeElement('date', Carbon::now('Europe/Riga')->format('Y-m-d H:i:s'));
         // <title>
         $this->obXMLWriter->writeElement('title', array_get($this->arShopData, 'name'));
         // </title>

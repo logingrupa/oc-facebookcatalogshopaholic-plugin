@@ -91,6 +91,20 @@ class Plugin extends PluginBase
     }
 
     /**
+     * Register scheduled tasks
+     * @param \Illuminate\Console\Scheduling\Schedule $obSchedule
+     */
+    public function registerSchedule($obSchedule)
+    {
+        // The command checks facebook_export_is_active itself, so a site with the feed
+        // switched off writes nothing.
+        $obSchedule->command('shopaholic:catalog_export.facebook_catalog')
+            ->dailyAt('02:30')
+            ->timezone('Europe/Riga')
+            ->withoutOverlapping();
+    }
+
+    /**
      * @return array
      */
     public function registerReportWidgets()
