@@ -1,15 +1,15 @@
 <?php namespace LoginGrupa\FacebookCatalogShopaholic\Classes\Console;
 
-use Illuminate\Console\Command;
 use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogKurPirktHelper;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\GenerateXMLForKurPirktCatalog;
 
 /**
- * Class CatalogExportForYandexMarket
+ * Class CatalogExportForKurPirktCatalog
  *
  * @package LoginGrupa\FacebookCatalogShopaholic\Classes\Console
  * @author  Sergey Zakharevich, s.zakharevich@lovata.com, LOVATA Group
  */
-class CatalogExportForKurPirktCatalog extends Command
+class CatalogExportForKurPirktCatalog extends AbstractCatalogExportCommand
 {
     /**
      * @var string command name.
@@ -19,15 +19,29 @@ class CatalogExportForKurPirktCatalog extends Command
     /**
      * @var string The console command description.
      */
-    protected $description = 'Generate xml file for KurPirkt.Catalog in sites default language';
+    protected $description = 'Generate xml file for KurPirkt.lv in the shop site language';
 
     /**
-     * Execute the console command.
-     * @throws \Throwable
+     * @return string
      */
-    public function handle()
+    protected function getActiveSettingCode(): string
     {
-        $obDataCollection = new ExportCatalogKurPirktHelper();
-        $obDataCollection->run();
+        return 'kurpirkt_export_is_active';
+    }
+
+    /**
+     * @return void
+     */
+    protected function runExport(): void
+    {
+        (new ExportCatalogKurPirktHelper())->run();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getFilePath(): string
+    {
+        return GenerateXMLForKurPirktCatalog::getFilePath();
     }
 }

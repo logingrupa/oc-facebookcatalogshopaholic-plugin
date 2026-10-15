@@ -1,6 +1,5 @@
 <?php namespace LoginGrupa\FacebookCatalogShopaholic\Classes\Helper;
 
-use File;
 use XMLWriter;
 use Carbon\Carbon;
 
@@ -12,6 +11,8 @@ use Carbon\Carbon;
  */
 class GenerateXML
 {
+    use SavesFeedFileAtomically;
+
     const FILE_NAME = 'yandex_market.yml';
     const DEFAULT_DIRECTORY = 'app/media/';
 
@@ -235,21 +236,6 @@ class GenerateXML
         $this->obXMLWriter->endElement();
         $this->obXMLWriter->endDocument();
         $this->sContent = $this->obXMLWriter->outputMemory();
-    }
-
-    /**
-     * Save generated content
-     */
-    protected function save()
-    {
-        $sMediaPath = self::getFilePath();
-        $sFilePath = storage_path($sMediaPath);
-
-        if (file_exists($sFilePath)) {
-            unlink($sFilePath);
-        }
-
-        File::put($sFilePath, $this->sContent);
     }
 
     /**

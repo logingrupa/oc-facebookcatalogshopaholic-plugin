@@ -1,6 +1,5 @@
 <?php namespace LoginGrupa\FacebookCatalogShopaholic\Classes\Helper;
 
-use File;
 use XMLWriter;
 use Carbon\Carbon;
 use LoginGrupa\FacebookCatalogShopaholic\Models\XMLExportSettings;
@@ -13,6 +12,8 @@ use LoginGrupa\FacebookCatalogShopaholic\Models\XMLExportSettings;
  */
 class GenerateXMLForSalidziniCatalog
 {
+    use SavesFeedFileAtomically;
+
     const FILE_NAME = 'salidzini_catalog.xml';
     const DEFAULT_DIRECTORY = 'app/media/';
 
@@ -222,21 +223,6 @@ class GenerateXMLForSalidziniCatalog
         $this->obXMLWriter->endElement();
         $this->obXMLWriter->endDocument();
         $this->sContent = $this->obXMLWriter->outputMemory();
-    }
-
-    /**
-     * Save generated content
-     */
-    protected function save()
-    {
-        $sMediaPath = self::getFilePath();
-        $sFilePath = storage_path($sMediaPath);
-
-        if (file_exists($sFilePath)) {
-            unlink($sFilePath);
-        }
-
-        File::put($sFilePath, $this->sContent);
     }
 
     /**

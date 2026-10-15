@@ -26,6 +26,14 @@ use LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Offer\ExtendOfferCollecti
  */
 class Plugin extends PluginBase
 {
+    /** @var array Export command => daily run time in Europe/Riga */
+    const EXPORT_SCHEDULE = [
+        'shopaholic:catalog_export.facebook_catalog'  => '02:30',
+        // Salidzini.lv fetches about 05:35 UTC, KurPirkt.lv between 18:50 and 23:10 UTC
+        'shopaholic:catalog_export.salidzini_catalog' => '06:40',
+        'shopaholic:catalog_export.kurpirkt_catalog'  => '19:40',
+    ];
+
     /** @var array Plugin dependencies */
     public $require = ['Lovata.Shopaholic', 'Lovata.Toolbox'];
 
@@ -89,12 +97,14 @@ class Plugin extends PluginBase
      */
     public function registerSchedule($obSchedule)
     {
-        // The command checks facebook_export_is_active itself, so a site with the feed
+        // Each command checks its own *_export_is_active setting, so a site with a feed
         // switched off writes nothing.
-        $obSchedule->command('shopaholic:catalog_export.facebook_catalog')
-            ->dailyAt('02:30')
-            ->timezone('Europe/Riga')
-            ->withoutOverlapping();
+        foreach (self::EXPORT_SCHEDULE as $sCommand => $sTime) {
+            $obSchedule->command($sCommand)
+                ->dailyAt($sTime)
+                ->timezone('Europe/Riga')
+                ->withoutOverlapping();
+        }
     }
 
     /**

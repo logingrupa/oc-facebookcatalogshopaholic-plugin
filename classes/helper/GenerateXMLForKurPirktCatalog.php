@@ -1,6 +1,5 @@
 <?php namespace LoginGrupa\FacebookCatalogShopaholic\Classes\Helper;
 
-use File;
 use XMLWriter;
 use Carbon\Carbon;
 
@@ -12,6 +11,8 @@ use Carbon\Carbon;
  */
 class GenerateXMLForKurPirktCatalog
 {
+    use SavesFeedFileAtomically;
+
     const FILE_NAME = 'kurpirkt_catalog.xml';
     const DEFAULT_DIRECTORY = 'app/media/';
 
@@ -159,21 +160,6 @@ class GenerateXMLForKurPirktCatalog
         $this->obXMLWriter->endElement();
         $this->obXMLWriter->endDocument();
         $this->sContent = $this->obXMLWriter->outputMemory();
-    }
-
-    /**
-     * Save generated content
-     */
-    protected function save()
-    {
-        $sMediaPath = self::getFilePath();
-        $sFilePath = storage_path($sMediaPath);
-
-        if (file_exists($sFilePath)) {
-            unlink($sFilePath);
-        }
-
-        File::put($sFilePath, $this->sContent);
     }
 
     /**

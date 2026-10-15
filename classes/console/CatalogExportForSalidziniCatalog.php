@@ -1,7 +1,7 @@
 <?php namespace LoginGrupa\FacebookCatalogShopaholic\Classes\Console;
 
-use Illuminate\Console\Command;
 use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogSalidziniHelper;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\GenerateXMLForSalidziniCatalog;
 
 /**
  * Class CatalogExportForSalidziniCatalog
@@ -9,7 +9,7 @@ use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogSalidziniHe
  * @package LoginGrupa\FacebookCatalogShopaholic\Classes\Console
  * @author  Sergey Zakharevich, s.zakharevich@lovata.com, LOVATA Group
  */
-class CatalogExportForSalidziniCatalog extends Command
+class CatalogExportForSalidziniCatalog extends AbstractCatalogExportCommand
 {
     /**
      * @var string command name.
@@ -19,15 +19,29 @@ class CatalogExportForSalidziniCatalog extends Command
     /**
      * @var string The console command description.
      */
-    protected $description = 'Generate xml file for Salidzini.Catalog in sites default language';
+    protected $description = 'Generate xml file for Salidzini.lv in the shop site language';
 
     /**
-     * Execute the console command.
-     * @throws \Throwable
+     * @return string
      */
-    public function handle()
+    protected function getActiveSettingCode(): string
     {
-        $obDataCollection = new ExportCatalogSalidziniHelper();
-        $obDataCollection->run();
+        return 'salidzini_export_is_active';
+    }
+
+    /**
+     * @return void
+     */
+    protected function runExport(): void
+    {
+        (new ExportCatalogSalidziniHelper())->run();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getFilePath(): string
+    {
+        return GenerateXMLForSalidziniCatalog::getFilePath();
     }
 }
