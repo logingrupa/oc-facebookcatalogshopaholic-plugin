@@ -35,3 +35,5 @@
   - 'The offer.preview_image_yandex and offer.images_yandex eager paths on ProductItem are gone. Products no longer hydrate their offers, and a nested offer path loaded every offer back in. OfferItem keeps both paths.'
 2.1.7:
   - 'KurPirkt.lv and Salidzini.lv feeds are generated daily again (06:40 and 19:40 Riga) and skip a shop whose export switch is off. Negative stock is exported as 0, 0.00 offers are left out, each feed is written atomically, and an export that writes nothing exits 1.'
+2.1.8:
+  - 'Every feed export writes its own temp file, so two exports running at once can no longer publish a half-written feed. Temp files left by a killed export are removed after an hour.'
