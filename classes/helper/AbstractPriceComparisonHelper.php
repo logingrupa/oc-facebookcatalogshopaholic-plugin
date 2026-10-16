@@ -11,7 +11,7 @@ use Lovata\Shopaholic\Classes\Collection\ProductCollection;
  * Class AbstractPriceComparisonHelper
  *
  * Shared catalog walk of the KurPirkt.lv and Salidzini.lv feeds: one row per active offer
- * of an active product that has a category.
+ * with a positive price, of an active product that has a category.
  *
  * @package Logingrupa\FacebookCatalogShopaholic\Classes\Helper
  */
@@ -54,6 +54,8 @@ abstract class AbstractPriceComparisonHelper
     /**
      * Init offers data
      *
+     * Offers without a positive price stay out: both sites would list them as free.
+     *
      * @param ProductItem $obProduct
      */
     protected function initOfferListData($obProduct)
@@ -63,6 +65,10 @@ abstract class AbstractPriceComparisonHelper
         }
 
         foreach ($obProduct->offer as $obOffer) {
+            if ((float) $obOffer->price_value <= 0) {
+                continue;
+            }
+
             $this->initOffer($obOffer, $obProduct);
         }
     }

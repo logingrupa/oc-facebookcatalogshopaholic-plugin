@@ -43,7 +43,9 @@ By default, export files are stored in `storage/app/media/`.
 
 The Facebook Catalog export runs every night at 02:30 Europe/Riga through the October scheduler (`php artisan schedule:run` must be in cron). The command applies the shop site locale and settings before exporting. Links stay without a language prefix (`/p/...`), so the shop redirects each visitor to their own language. It exits without writing when **Facebook export is active** is off in the settings, so each installation decides on its own whether the feed exists.
 
-Salidzini.lv runs daily at 06:40 and KurPirkt.lv at 19:40 Europe/Riga, before each site's crawler fetches its file. Each skips when its own export switch is off. Both feeds list stock as units on hand, so negative 1C stock goes out as 0. Every feed is written to a temp file next to the old one and then renamed over it, so a crawler never finds the file missing.
+Salidzini.lv runs daily at 06:40 and KurPirkt.lv at 19:40 Europe/Riga, before each site's crawler fetches its file. Each skips when its own export switch is off. Both feeds list stock as units on hand, so negative 1C stock goes out as 0. Offers without a positive price stay out of both feeds, because either site would list them as free. Every feed is written to a temp file next to the old one and then renamed over it, so a crawler never finds the file missing.
+
+When an export switch is on but the run writes no file, the command exits with code 1. The scheduler sends command output to /dev/null, so this exit code is what puts the failure in the Laravel log.
 
 The feed title, link and `g:brand` come from **Short store name** and **Store homepage URL** in the same settings page.
 

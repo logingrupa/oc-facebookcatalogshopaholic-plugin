@@ -63,11 +63,13 @@ Root CLAUDE.md governs: Hungarian notation, Store -> Collection -> Item read pat
   commands extend AbstractCatalogExportCommand: applyShopSite() sets the active site + locale
   (primary site, or the first enabled one on .no where the primary is disabled), then the
   command checks its *_export_is_active switch, runs, and reports "Written" only when the
-  file mtime is newer than the run start. It deliberately does NOT apply the route prefix:
-  feed links stay bare /p/... so October redirects every visitor to their own language
-  (owner ruling 2026-09-15). Only the Yandex command runs without a site.
+  file mtime is newer than the run start. Switch on + no file written exits 1: schedule:run
+  sends output to /dev/null and logs only a non-zero exit. It deliberately does NOT apply
+  the route prefix: feed links stay bare /p/... so October redirects every visitor to their
+  own language (owner ruling 2026-09-15). Only the Yandex command runs without a site.
 - KurPirkt/Salidzini export stock as max(0, quantity): 1C sends negative stock for oversold
-  offers and both sites read the field as units on hand.
+  offers and both sites read the field as units on hand. Offers with price_value <= 0 are
+  skipped (a 0.00 row lists as free, Salidzini sorts it first).
 - Every generator saves through SavesFeedFileAtomically (temp file in the same dir, then
   rename), so a crawler fetching mid-export gets the old or the new file, never a 404.
 - Schedule: registerSchedule runs Plugin::EXPORT_SCHEDULE dailyAt Europe/Riga,

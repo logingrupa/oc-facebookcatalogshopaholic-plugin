@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * The scheduler runs every feed command on every install. A feed whose export switch is
- * off writes nothing, and a run without offers keeps the previous file and says so.
+ * off writes nothing, and a run without offers keeps the previous file and fails.
  */
 class ExportCommandGateTest extends FeedExportPluginTestCase
 {
@@ -100,7 +100,7 @@ class ExportCommandGateTest extends FeedExportPluginTestCase
         touch($sFilePath, time() - 3600);
         XMLExportSettings::set($sSettingCode, '1');
 
-        $this->assertSame(0, Artisan::call($sCommand));
+        $this->assertSame(1, Artisan::call($sCommand));
         $this->assertStringContainsString('not written', Artisan::output());
         $this->assertSame('<root>yesterday</root>', file_get_contents($sFilePath));
     }

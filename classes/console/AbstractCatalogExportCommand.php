@@ -11,7 +11,7 @@ use LoginGrupa\FacebookCatalogShopaholic\Models\XMLExportSettings;
  * Class AbstractCatalogExportCommand
  *
  * Applies the shop site, skips when the feed's export switch is off, runs the export and
- * reports from the file mtime whether the feed file was written.
+ * reports from the file mtime whether the feed file was written, failing when it was not.
  *
  * @package Logingrupa\FacebookCatalogShopaholic\Classes\Console
  */
@@ -19,16 +19,20 @@ abstract class AbstractCatalogExportCommand extends Command
 {
     /**
      * Execute the console command.
+     *
+     * A switched-on feed that writes no file exits 1: schedule:run sends command output to
+     * /dev/null and logs only a non-zero exit code.
+     * @return int
      * @throws \Throwable
      */
-    public function handle()
+    public function handle(): int
     {
         $this->applyShopSite();
 
         $sSettingCode = $this->getActiveSettingCode();
         if (!XMLExportSettings::getValue($sSettingCode)) {
             $this->warn($sSettingCode . ' is off in the XML export settings, nothing written');
-            return;
+            return self::SUCCESS;
         }
 
         $iStartedAt = time();
@@ -38,7 +42,7 @@ abstract class AbstractCatalogExportCommand extends Command
         clearstatcache(true, $sFilePath);
         if (!file_exists($sFilePath) || filemtime($sFilePath) < $iStartedAt) {
             $this->warn('No offers to export, ' . $sFilePath . ' not written');
-            return;
+            return self::FAILURE;
         }
 
         $this->info(sprintf(
@@ -47,6 +51,8 @@ abstract class AbstractCatalogExportCommand extends Command
             filesize($sFilePath) / 1048576,
             memory_get_peak_usage(true) / 1048576
         ));
+
+        return self::SUCCESS;
     }
 
     /**
