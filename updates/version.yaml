@@ -33,3 +33,5 @@
   - 'Feed links are bare /p/... again, without the site route prefix, so October sends each Facebook or Instagram visitor to their own language. The command still applies the site locale and site-scoped settings.'
 2.1.6:
   - 'The offer.preview_image_yandex and offer.images_yandex eager paths on ProductItem are gone. Products no longer hydrate their offers, and a nested offer path loaded every offer back in. OfferItem keeps both paths.'
+2.1.7:
+  - 'KurPirkt.lv and Salidzini.lv feeds are generated daily again (06:40 and 19:40 Riga) and skip a shop whose export switch is off. Negative stock is exported as 0, 0.00 offers are left out, each feed is written atomically, and an export that writes nothing exits 1.'
