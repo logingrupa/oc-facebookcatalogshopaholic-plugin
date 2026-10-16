@@ -154,6 +154,10 @@ class ExportCommandGateTest extends FeedExportPluginTestCase
 
     public function testGeneratedFeedKeepsThePlainWriteMode()
     {
+        if (PHP_OS_FAMILY === 'Windows') {
+            $this->markTestSkipped('Windows reports 0666 for every writable file, so a 0600 feed cannot be told apart');
+        }
+
         $sControlPath = $this->sMediaPath . 'control.xml';
         File::put($sControlPath, '<root/>');
 
