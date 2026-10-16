@@ -105,15 +105,75 @@ class ExportCommandGateTest extends FeedExportPluginTestCase
         $this->assertSame('<root>yesterday</root>', file_get_contents($sFilePath));
     }
 
-    public function testGeneratedFeedReplacesTheOldFileAndLeavesNoTempFile()
+    public function testGeneratedFeedLeavesOtherWritersTempFilesAlone()
     {
         $sFilePath = $this->sMediaPath . 'kurpirkt_catalog.xml';
         file_put_contents($sFilePath, '<root>yesterday</root>');
+        file_put_contents($sFilePath . '.tmp', 'in-flight');
+        file_put_contents($sFilePath . '.other.tmp', 'other in-flight');
 
-        (new GenerateXMLForKurPirktCatalog())->generate(['offers' => [['name' => 'Gel polish 12 ml', 'inventory' => 0]]]);
+        $this->generateKurPirktFeed();
 
         $this->assertStringContainsString('<name>Gel polish 12 ml</name>', file_get_contents($sFilePath));
-        $this->assertSame(['kurpirkt_catalog.xml'], array_values(array_diff(scandir($this->sMediaPath), ['.', '..'])));
+        $this->assertSame('in-flight', file_get_contents($sFilePath . '.tmp'));
+        $this->assertSame('other in-flight', file_get_contents($sFilePath . '.other.tmp'));
+        $this->assertSame(
+            ['kurpirkt_catalog.xml', 'kurpirkt_catalog.xml.other.tmp', 'kurpirkt_catalog.xml.tmp'],
+            $this->getMediaFileList()
+        );
+    }
+
+    public function testGeneratedFeedSweepsTempFilesOlderThanAnHour()
+    {
+        $sFilePath = $this->sMediaPath . 'kurpirkt_catalog.xml';
+        file_put_contents($sFilePath . '.dead.tmp', 'orphan');
+        touch($sFilePath . '.dead.tmp', time() - 7200);
+        file_put_contents($sFilePath . '.live.tmp', 'in-flight');
+
+        $this->generateKurPirktFeed();
+
+        $this->assertFileDoesNotExist($sFilePath . '.dead.tmp');
+        $this->assertSame('in-flight', file_get_contents($sFilePath . '.live.tmp'));
+        $this->assertSame(['kurpirkt_catalog.xml', 'kurpirkt_catalog.xml.live.tmp'], $this->getMediaFileList());
+    }
+
+    public function testFailedMoveThrowsAndLeavesNoTempFile()
+    {
+        mkdir($this->sMediaPath . 'kurpirkt_catalog.xml');
+
+        $obCaught = null;
+        try {
+            $this->generateKurPirktFeed();
+        } catch (\Throwable $obException) {
+            $obCaught = $obException;
+        }
+
+        $this->assertNotNull($obCaught, 'save() must throw when the move fails');
+        $this->assertSame([], array_values(array_filter($this->getMediaFileList(), fn ($sName) => str_ends_with($sName, '.tmp'))));
+    }
+
+    public function testGeneratedFeedKeepsThePlainWriteMode()
+    {
+        $sControlPath = $this->sMediaPath . 'control.xml';
+        File::put($sControlPath, '<root/>');
+
+        $this->generateKurPirktFeed();
+
+        clearstatcache();
+        $this->assertSame(fileperms($sControlPath) & 0777, fileperms($this->sMediaPath . 'kurpirkt_catalog.xml') & 0777);
+    }
+
+    protected function generateKurPirktFeed(): void
+    {
+        (new GenerateXMLForKurPirktCatalog())->generate(['offers' => [['name' => 'Gel polish 12 ml', 'inventory' => 0]]]);
+    }
+
+    protected function getMediaFileList(): array
+    {
+        $arFileList = array_values(array_diff(scandir($this->sMediaPath), ['.', '..']));
+        sort($arFileList);
+
+        return $arFileList;
     }
 
     /** Price comparison feeds only: the Facebook export reads shop and currency tables first */
