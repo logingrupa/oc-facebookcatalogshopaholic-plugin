@@ -3,6 +3,7 @@
 use Flash;
 use Storage;
 use Backend\Classes\ReportWidgetBase;
+use Logingrupa\FacebookCatalogShopaholic\Classes\Helper\FeedSiteContext;
 use LoginGrupa\FacebookCatalogShopaholic\Models\XMLExportSettings;
 use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogHelper;
 use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogFacebookHelper;
@@ -51,8 +52,10 @@ class ExportToXML extends ReportWidgetBase
      */
     public function onGenerateXMLFileYandexMarket()
     {
-        $obDataCollection = new ExportCatalogHelper();
-        $obDataCollection->run();
+        FeedSiteContext::runInShopSite(function () {
+            $obDataCollection = new ExportCatalogHelper();
+            $obDataCollection->run();
+        });
         // \Artisan::call('shopaholic:catalog_export.yandex_market');
         Flash::info(trans('logingrupa.facebookcatalogshopaholic::lang.message.export_is_completed', ['name' => 'Yandex.Market']));
 
@@ -64,8 +67,10 @@ class ExportToXML extends ReportWidgetBase
      */
     public function onGenerateXMLFileFacebookCatalog()
     {
-        $obDataCollection = new ExportCatalogFacebookHelper();
-        $obDataCollection->run();
+        FeedSiteContext::runInShopSite(function () {
+            $obDataCollection = new ExportCatalogFacebookHelper();
+            $obDataCollection->run();
+        });
         // \Artisan::call('shopaholic:catalog_export.facebook_catalog');
         Flash::info(trans('logingrupa.facebookcatalogshopaholic::lang.message.export_is_completed', ['name' => 'Facebook.Catalog']));
 
@@ -74,8 +79,10 @@ class ExportToXML extends ReportWidgetBase
 
     public function onGenerateXMLFileKurPirktCatalog()
     {
-        $obDataCollection = new ExportCatalogKurPirktHelper();
-        $obDataCollection->run();
+        FeedSiteContext::runInShopSite(function () {
+            $obDataCollection = new ExportCatalogKurPirktHelper();
+            $obDataCollection->run();
+        });
         // \Artisan::call('shopaholic:catalog_export.facebook_catalog');
         Flash::info(trans('logingrupa.facebookcatalogshopaholic::lang.message.export_is_completed', ['name' => 'KurPirkt.Catalog']));
 
@@ -84,8 +91,10 @@ class ExportToXML extends ReportWidgetBase
 
     public function onGenerateXMLFileSalidziniCatalog()
     {
-        $obDataCollection = new ExportCatalogSalidziniHelper();
-        $obDataCollection->run();
+        FeedSiteContext::runInShopSite(function () {
+            $obDataCollection = new ExportCatalogSalidziniHelper();
+            $obDataCollection->run();
+        });
         // \Artisan::call('shopaholic:catalog_export.facebook_catalog');
         Flash::info(trans('logingrupa.facebookcatalogshopaholic::lang.message.export_is_completed', ['name' => 'Salidzini.Catalog']));
         $this->vars['sFileUrl'] = url('/') . '/storage/' . GenerateXMLForSalidziniCatalog::getFilePath();

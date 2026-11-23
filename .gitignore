@@ -2,6 +2,7 @@
 Homestead.yaml
 /_ide_helper.php
 
+
 #site
 pdf/
 _backup/
@@ -90,3 +91,4 @@ node_modules/
 docs/
 
 _ide_helper.php
+.phpunit.result.cache

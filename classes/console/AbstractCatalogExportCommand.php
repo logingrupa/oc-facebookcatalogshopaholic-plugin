@@ -1,10 +1,7 @@
 <?php namespace Logingrupa\FacebookCatalogShopaholic\Classes\Console;
 
-use App;
-use Site;
-use RuntimeException;
 use Illuminate\Console\Command;
-use RainLab\Translate\Classes\Translator;
+use Logingrupa\FacebookCatalogShopaholic\Classes\Helper\FeedSiteContext;
 use LoginGrupa\FacebookCatalogShopaholic\Models\XMLExportSettings;
 
 /**
@@ -78,26 +75,13 @@ abstract class AbstractCatalogExportCommand extends Command
      * the app locale and site-scoped settings read null. On .no the primary site is the
      * disabled one, the shop runs on the first enabled site.
      *
-     * The route prefix is NOT applied on purpose: feed links stay bare /p/... so October
-     * redirects each visitor to their own language.
+     * The shop site's route prefix IS applied so feed links land directly on the canonical
+     * localized URL (/lv/p/... on .lv, /lt/p/... on .lt, /p/... on .no) without a redirect
+     * hop or Accept-Language misrouting.
      * @return void
      */
     protected function applyShopSite(): void
     {
-        $obSite = Site::getPrimarySite();
-        if (empty($obSite) || !$obSite->is_enabled) {
-            $obSite = Site::listEnabled()->first();
-        }
-
-        if (empty($obSite)) {
-            throw new RuntimeException('No enabled site definition, cannot resolve the shop site');
-        }
-
-        Site::setActiveSite($obSite);
-        App::setLocale($obSite->locale);
-
-        if (class_exists(Translator::class)) {
-            Translator::instance()->setLocale($obSite->locale, false);
-        }
+        FeedSiteContext::apply();
     }
 }

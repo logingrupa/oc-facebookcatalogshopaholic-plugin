@@ -1,6 +1,7 @@
 <?php namespace LoginGrupa\FacebookCatalogShopaholic\Classes\Console;
 
 use Illuminate\Console\Command;
+use Logingrupa\FacebookCatalogShopaholic\Classes\Helper\FeedSiteContext;
 use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogHelper;
 
 /**
@@ -27,6 +28,8 @@ class CatalogExportForYandexMarket extends Command
      */
     public function handle()
     {
+        FeedSiteContext::apply();
+
         $obDataCollection = new ExportCatalogHelper();
         $obDataCollection->run();
     }

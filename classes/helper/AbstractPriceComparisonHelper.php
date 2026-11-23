@@ -74,7 +74,8 @@ abstract class AbstractPriceComparisonHelper
     }
 
     /**
-     * Bare /p/<slug>, plus the offer ID when the product has more than one offer
+     * Product URL (/p/<slug>, under the active site's route prefix when prefixed),
+     * plus the offer ID when the product has more than one offer.
      *
      * @param OfferItem $obOffer
      * @param ProductItem $obProduct

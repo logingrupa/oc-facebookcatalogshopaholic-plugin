@@ -65,7 +65,7 @@ abstract class FeedExportPluginTestCase extends PluginTestCase
 
     /**
      * defineSites replaces the site definitions the core migrations seed.
-     * @param array $arSiteList list of [locale, is_primary, is_enabled]
+     * @param array $arSiteList list of [locale, is_primary, is_enabled, route_prefix?, is_prefixed?]
      * @return array site id per locale
      */
     protected function defineSites($arSiteList)
@@ -73,7 +73,10 @@ abstract class FeedExportPluginTestCase extends PluginTestCase
         Db::table('system_site_definitions')->delete();
 
         $arSiteIdList = [];
-        foreach (array_values($arSiteList) as $iIndex => [$sLocale, $bIsPrimary, $bIsEnabled]) {
+        foreach (array_values($arSiteList) as $iIndex => $arSite) {
+            [$sLocale, $bIsPrimary, $bIsEnabled] = $arSite;
+            $sRoutePrefix = (string) ($arSite[3] ?? '');
+            $bIsPrefixed = array_key_exists(4, $arSite) ? (bool) $arSite[4] : ($sRoutePrefix !== '');
             $iSiteId = $iIndex + 1;
             Db::table('system_site_definitions')->insert([
                 'id' => $iSiteId,
@@ -84,6 +87,8 @@ abstract class FeedExportPluginTestCase extends PluginTestCase
                 'is_primary' => $bIsPrimary,
                 'is_enabled' => $bIsEnabled,
                 'is_enabled_edit' => $bIsEnabled,
+                'is_prefixed' => $bIsPrefixed,
+                'route_prefix' => $sRoutePrefix,
             ]);
 
             $arSiteIdList[$sLocale] = $iSiteId;
