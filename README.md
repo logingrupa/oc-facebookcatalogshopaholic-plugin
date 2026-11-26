@@ -1,95 +1,22 @@
-# Facebook Catalog for Shopaholic based on Shopaholic.YandexMarketShopaholic
+# Facebook Catalog for Shopaholic
 
-## Overview
+October CMS v4 extension for [Lovata Shopaholic](https://octobercms.com/plugin/lovata-shopaholic) exporting XML feeds for **Facebook Catalog**, **Yandex Market**, **KurPirkt.lv**, and **Salidzini.lv**.
 
-The **Facebook Catalog for Shopaholic** plugin for October CMS is an extension of the [Lovata Shopaholic](https://octobercms.com/plugin/lovata-shopaholic) plugin. It enables merchants to export their product catalogs in formats compatible with various platforms, including **Facebook Catalog**, **Yandex Market**, **KurPirkt.lv**, and **Salidzini.lv**.
+For architecture details and agent gotchas, see [CLAUDE.md](CLAUDE.md).
 
+## Configuration & Usage
+- Configure in backend: `Settings > Export to Facebook.Catalog` (`short_store_name`, `store_homepage_url`, per-feed active switches, export paths; default `storage/app/media/`).
+- **Dashboard widget**: `Export to XML` runs exports inside the active shop's `Site::withContext()` and restores backend context afterwards.
+- **Artisan commands**:
+  - `shopaholic:catalog_export.facebook_catalog`
+  - `shopaholic:catalog_export.yandex_market`
+  - `shopaholic:catalog_export.kurpirkt_catalog`
+  - `shopaholic:catalog_export.salidzini_catalog`
 
-## Configuration
-
-Navigate to `Settings > Export to Facebook.Catalog` in the October CMS backend to configure the plugin.
-
-
-### Key Features
-
-- **Export to Facebook Catalog**: Generates an export file in **XML** format for Facebook Catalogs.
-- **Platform Support**: Includes support for **Yandex Market**, **KurPirkt.lv**, and **Salidzini.lv** formats.
-- **Extensible**: Easily extend and customize the product and offer data fields via event listeners.
-- **CLI and GUI Options**: Manage catalog exports using artisan commands or backend widgets.
-- **Customizable Export Paths**: Define the export file's storage location.
-
-## Installation
-
-### Artisan
-
-Use the following artisan command to install the plugin:
-
-```bash
-php artisan plugin:install Logingrupa.FacebookCatalogShopaholic
-```
-
-### Exporting Files
-
-1. **Dashboard Widget**: Use the `Export to XML` widget from the October CMS dashboard to generate catalogs.
-2. **Artisan Commands**: Execute the following artisan commands for platform-specific exports:
-   - **Facebook Catalog**: `shopaholic:catalog_export.facebook_catalog`
-   - **Yandex Market**: `shopaholic:catalog_export.yandex_market`
-   - **KurPirkt.lv**: `shopaholic:catalog_export.kurpirkt_catalog`
-   - **Salidzini.lv**: `shopaholic:catalog_export.salidzini_catalog`
-
-By default, export files are stored in `storage/app/media/`.
-
-### Nightly schedule
-
-The Facebook Catalog export runs every night at 02:30 Europe/Riga through the October scheduler (`php artisan schedule:run` must be in cron). The command applies the shop site locale and settings before exporting. Links stay without a language prefix (`/p/...`), so the shop redirects each visitor to their own language. It exits without writing when **Facebook export is active** is off in the settings, so each installation decides on its own whether the feed exists.
-
-Salidzini.lv runs daily at 06:40 and KurPirkt.lv at 19:40 Europe/Riga, before each site's crawler fetches its file. Each skips when its own export switch is off. Both feeds list stock as units on hand, so negative 1C stock goes out as 0. Offers without a positive price stay out of both feeds, because either site would list them as free. Every feed is written to a temp file next to the old one and then renamed over it, so a crawler never finds the file missing.
-
-When an export switch is on but the run writes no file, the command exits with code 1. The scheduler sends command output to /dev/null, so this exit code is what puts the failure in the Laravel log.
-
-The feed title, link and `g:brand` come from **Short store name** and **Store homepage URL** in the same settings page.
-
-## Detailed Functionality
-
-### Core Features
-
-#### 1. Export Helpers
-Located in `classes/helper`, these classes handle the generation of XML files for various platforms:
-- **`ExportCatalogFacebookHelper`**: Generates XML for Facebook Catalogs.
-- **`ExportCatalogHelper`**: Abstracts common catalog export logic.
-- **`ExportCatalogKurPirktHelper`**, **`ExportCatalogSalidziniHelper`**: Platform-specific helpers for KurPirkt.lv and Salidzini.lv.
-- **`GenerateXML`**: Core logic for building XML documents.
-
-#### 2. Event Listeners
-Found in `classes/event`, these handlers allow the extension of product and offer data models:
-- **`ExtendProductFieldsHandler`**: Adds additional fields to product models.
-- **`ExtendOfferFieldsHandler`**: Extends offer models with custom fields.
-- **`ExtendOfferCollection`**: Modifies the collection logic for offers.
-
-#### 3. Console Commands
-Located in `classes/console`, these commands provide a CLI interface for generating exports:
-- **`CatalogExportForFacebookCatalog.php`**: Command for Facebook Catalog export.
-- **`CatalogExportForYandexMarket.php`**: Command for Yandex Market export.
-- Additional commands for KurPirkt.lv and Salidzini.lv.
-
-#### 4. Widgets
-- **`ExportToXML.php`**: Provides a widget to generate XML files directly from the October CMS backend.
-
-### Language Support
-- **English**: `lang/en/lang.php`
-- **Russian**: `lang/ru/lang.php`
-
-## What is Shopaholic?
-
-Shopaholic is the most popular e-commerce ecosystem for October CMS, designed with a focus on modularity and simplicity. Learn more at [shopaholic.one](https://shopaholic.one).
-
-## Credits
-
-- Extended by **Logingrupa** as an extension of [Lovata Shopaholic](https://octobercms.com/plugin/lovata-shopaholic).
-- Core plugin development by [Sergey Zakharevich](https://github.com/wobqqq) and [Andrey Kharanenka](https://github.com/kharanenka).
+## Schedule & Feed Behavior
+- Scheduled daily (Europe/Riga, `withoutOverlapping`): Facebook `02:30`, Salidzini `06:40`, KurPirkt `19:40`. Those three scheduled commands exit cleanly when their active switch is off and exit `1` if active but no fresh file is written (Yandex calls its helper directly).
+- **Canonical URLs (`2.1.9+`)**: `FeedSiteContext` applies the shop's site, locale, and route prefix across all four feeds (`/lv/p/...` on `.lv`, `/lt/p/...` on `.lt`, `/p/...` on `.no`).
+- **Safety**: KurPirkt/Salidzini clamp negative 1C stock to `0` and skip non-positive prices. All feeds write atomically via temp file + rename.
 
 ## License
-
-© 2024, Logingrupa under [GNU GPL v3](https://opensource.org/licenses/GPL-3.0).
-
-This plugin builds on the original [Shopaholic Plugin](https://github.com/lovata/oc-shopaholic-plugin) by **LOVATA Group, LLC**.
+© 2024 Logingrupa ([GNU GPL v3](https://opensource.org/licenses/GPL-3.0)), built on Lovata Shopaholic.
